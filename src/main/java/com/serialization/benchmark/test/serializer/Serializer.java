@@ -1,4 +1,4 @@
-package homemadeserializer;
+package com.serialization.benchmark.test.serializer;
 
 import java.io.IOException;
 

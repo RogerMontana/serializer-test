@@ -1,4 +1,4 @@
-package homemadeserializer;
+package com.serialization.benchmark.test.serializer.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.concurrent.atomic.AtomicReference;
+
+import com.serialization.benchmark.test.serializer.Serializer;
 
 /**
  * Created by Artem Karpov

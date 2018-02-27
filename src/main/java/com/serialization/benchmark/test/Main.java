@@ -1,9 +1,11 @@
+package com.serialization.benchmark.test;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
-import homemadeserializer.Serializer;
-import homemadeserializer.SerializerImpl;
+import com.serialization.benchmark.test.serializer.Serializer;
+import com.serialization.benchmark.test.serializer.impl.SerializerImpl;
 
 /**
  * Created by Artem Karpov
