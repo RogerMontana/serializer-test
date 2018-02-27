@@ -30,7 +30,6 @@ public class SerializerImpl implements Serializer {
 		try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes); ObjectInputStream ois = new ObjectInputStream(bis)) {
 			obj = ois.readObject();
 		}
-
 		typed.set(type.cast(obj));
 		return typed.get();
 	}
