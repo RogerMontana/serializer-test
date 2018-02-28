@@ -1,9 +1,18 @@
 package com.serialization.benchmark.test;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.zip.DataFormatException;
 
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
+
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
+import com.serialization.benchmark.test.dto.ParamsDto;
 import com.serialization.benchmark.test.dto.ProgrammingLangDTO;
 import com.serialization.benchmark.test.serializer.Serializer;
 import com.serialization.benchmark.test.serializer.impl.SerializerImpl;
@@ -12,21 +21,63 @@ import com.serialization.benchmark.test.serializer.impl.SerializerImpl;
  * Created by Artem Karpov
  */
 public class Main {
-	public static void main(String[] args) throws IOException, ClassNotFoundException {
+
+	private static ParamsDto p = new ParamsDto("x","11","333");
+	private static ProgrammingLangDTO goLangDto = new ProgrammingLangDTO("GoLang","Typed","Rob Pike", p);
+
+	@Benchmark
+	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
+	public static void testSerializationHomeBrewSerializer() throws IOException, ClassNotFoundException, DataFormatException {
 		Serializer serializer = new SerializerImpl();
 
-		ProgrammingLangDTO goLangDto = new ProgrammingLangDTO("GoLang","Typed","Rob Pike");
-		ProgrammingLangDTO pythonDto = new ProgrammingLangDTO("Python","DuckTyping","Van Rossum");
+		byte[] bytes = serializer.objectToByteArray(goLangDto);
 
-		List<ProgrammingLangDTO> dtoList = Arrays.asList(goLangDto, pythonDto);
+		ProgrammingLangDTO dto1 = serializer.toObject(bytes, ProgrammingLangDTO.class);
 
-		byte[] bytes = serializer.objectToByteArray(dtoList);
+	}
 
-		System.out.println(Arrays.toString(bytes));
+	@Benchmark
+	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
+	public static void testSerializationKryoSerializer() throws IOException, ClassNotFoundException {
+		Kryo kryo = new Kryo();
 
-		List<ProgrammingLangDTO> dto1 = serializer.toObject(bytes, List.class);
+		byte[] object = new byte[1024];
 
-		System.out.println(dto1.toString());
+		Output output = new Output(object);
 
+		kryo.writeObject(output, goLangDto);
+		output.close();
+		Input input = new Input(object);
+
+		ProgrammingLangDTO someObject = kryo.readObject(input, ProgrammingLangDTO.class);
+		input.close();
+	}
+
+	@Benchmark
+	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
+	public static void testSerializationHomeBrewSerializerFlatObj() throws IOException, ClassNotFoundException, DataFormatException {
+		Serializer serializer = new SerializerImpl();
+
+		byte[] bytes = serializer.objectToByteArray(p);
+
+		ParamsDto dto1 = serializer.toObject(bytes, ParamsDto.class);
+
+	}
+
+	@Benchmark
+	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
+	public static void testSerializationKryoSerializerFlatObj() throws IOException, ClassNotFoundException {
+		Kryo kryo = new Kryo();
+
+		byte[] object = new byte[1024];
+
+		Output output = new Output(object);
+
+		kryo.writeObject(output, p);
+		output.close();
+		Input input = new Input(object);
+
+		ParamsDto someObject = kryo.readObject(input, ParamsDto.class);
+		input.close();
 	}
 }

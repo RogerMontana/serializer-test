@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.zip.DataFormatException;
 
 import com.serialization.benchmark.test.serializer.Serializer;
+
 
 /**
  * Created by Artem Karpov
@@ -24,7 +26,7 @@ public class SerializerImpl implements Serializer {
 		return bytes;
 	}
 
-	public <T> T toObject(byte[] bytes, Class<T> type) throws IOException, ClassNotFoundException {
+	public <T> T toObject(byte[] bytes, Class<T> type) throws IOException, ClassNotFoundException, DataFormatException {
 		Object obj;
 		AtomicReference<T> typed = new AtomicReference<>();
 		try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes); ObjectInputStream ois = new ObjectInputStream(bis)) {
