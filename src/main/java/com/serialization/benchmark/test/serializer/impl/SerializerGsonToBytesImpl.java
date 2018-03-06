@@ -9,7 +9,7 @@ import com.serialization.benchmark.test.serializer.exceptions.SerializerExceptio
 /**
  * Created by Artem Karpov
  */
-public class SerializerToStringImpl implements Serializer {
+public class SerializerGsonToBytesImpl implements Serializer {
 	private static final String encoding = "UTF8";
 	private Gson gson = new Gson();
 
@@ -20,9 +20,9 @@ public class SerializerToStringImpl implements Serializer {
 			string = new String(bytes, encoding);
 		}
 		catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			throw new SerializerException("Error when serializing string reason - unsupported encoding");
 		}
-		return (T) gson.fromJson(string, type);
+		return gson.fromJson(string, type);
 	}
 
 	@Override

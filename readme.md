@@ -6,19 +6,17 @@ RAM: 23.4 GiB
 
 Result of JMH Test:
 
-Run complete. Total time: 01:04:33
-
-
-|Benchmark                            |Mode   |Samples  |Score      |Score error |Units |
+|Benchmark      |FlatObj              |Mode   |Samples  |Score      |Score error |Units |
 | :----------------------------------:| :---: | :-----: |:--------: |:----------:|:----:|
-| ManualStringSerializerFlatObj       |  avgt |      200|  4965.42  |     19.073 | ns/op|
-| ManualStringSerializerObj           |  avgt |      200|  7892.57  |     26.682 | ns/op|
-| KryoSerializer                      |  avgt |      200| 16879.475 |     69.906 | ns/op|
-| KryoSerializerFlatObj               |  avgt |      200| 12352.682 |     58.390 | ns/op|
-| ApacheSerializer                    |  avgt |      200| 23671.631 |    112.764 | ns/op|
-| ApacheSerializerFlatObj             |  avgt |      200| 17831.347 |     84.854 | ns/op|
-| HomeBrewSerializer(Java)            |  avgt |      200| 24179.693 |    118.909 | ns/op|
-| HomeBrewSerializerFlatObj (Java)    |  avgt |      200| 18252.110 |     82.053 | ns/op|
+|GsonToBytesSerializerFlatObj         |  avgt |      10 |  6984.254 |     494.971| ns/op|
+|KryoSerializerFlatObj                |  avgt |      10 | 12334.007 |     636.009| ns/op|
+|JavaSerializerFlatObj                |  avgt |      10 | 18744.443 |    1049.000| ns/op|
+|ApacheSerializerFlatObj              |  avgt |      10 | 18963.227 |    1000.702| ns/op|
 
 
-          
+|Benchmark      |Obj with inner Object|Mode   |Samples  |Score      |Score error |Units |
+| :----------------------------------:| :---: | :-----: |:--------: |:----------:|:----:|
+|GsonToBytesSerializerObj             |  avgt |      10 | 11945.070 |     586.754| ns/op|
+|KryoSerializerObj                    |  avgt |      10 | 15624.360 |     367.077| ns/op|
+|ApacheSerializerObj                  |  avgt |      10 | 23692.375 |    1798.404| ns/op|
+|JavaSerializerObj                    |  avgt |      10 | 25044.740 |    2399.950| ns/op|

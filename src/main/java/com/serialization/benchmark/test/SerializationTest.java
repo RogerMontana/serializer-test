@@ -6,6 +6,11 @@ import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.profile.HotspotMemoryProfiler;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.RunnerException;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
@@ -14,20 +19,32 @@ import com.serialization.benchmark.test.dto.ParamsDto;
 import com.serialization.benchmark.test.dto.ProgrammingLangDTO;
 import com.serialization.benchmark.test.serializer.Serializer;
 import com.serialization.benchmark.test.serializer.impl.SerializerApacheImpl;
+import com.serialization.benchmark.test.serializer.impl.SerializerGsonToBytesImpl;
 import com.serialization.benchmark.test.serializer.impl.SerializerImpl;
-import com.serialization.benchmark.test.serializer.impl.SerializerToStringImpl;
 
 /**
  * Created by Artem Karpov
  */
-public class Main {
-
+public class SerializationTest {
 	private static ParamsDto flatDto = new ParamsDto("x","11","333");
 	private static ProgrammingLangDTO graphDto = new ProgrammingLangDTO("GoLang","Typed","Rob Pike", flatDto);
 
+
+	public static void main(String[] args) throws RunnerException {
+		Options opt = new OptionsBuilder()
+				.include(".*" + SerializationTest.class.getSimpleName() + ".*")
+				.warmupIterations(10)
+				.addProfiler(HotspotMemoryProfiler.class)
+				.measurementIterations(10)
+				.forks(1)
+				.build();
+
+		new Runner(opt).run();
+	}
+
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
-	public static void testSerializationHomeBrewSerializer() {
+	public static void JavaSerializer() {
 		Serializer serializer = new SerializerImpl();
 
 		byte[] bytes = serializer.objectToByteArray(graphDto);
@@ -38,7 +55,7 @@ public class Main {
 
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
-	public static void testSerializationKryoSerializer() {
+	public static void KryoSerializerObj() {
 		Kryo kryo = new Kryo();
 
 		byte[] object = new byte[1024];
@@ -55,7 +72,7 @@ public class Main {
 
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
-	public static void testSerializationHomeBrewSerializerFlatObj() {
+	public static void JavaSerializerFlatObj() {
 		Serializer serializer = new SerializerImpl();
 
 		byte[] bytes = serializer.objectToByteArray(flatDto);
@@ -65,7 +82,7 @@ public class Main {
 
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
-	public static void testSerializationKryoSerializerFlatObj() {
+	public static void KryoSerializerFlatObj() {
 		Kryo kryo = new Kryo();
 
 		byte[] object = new byte[1024];
@@ -82,7 +99,7 @@ public class Main {
 
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
-	public static void testSerializationApacheSerializer() {
+	public static void ApacheSerializerObj() {
 		Serializer serializer = new SerializerApacheImpl();
 
 		byte[] bytes = serializer.objectToByteArray(graphDto);
@@ -92,7 +109,7 @@ public class Main {
 
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
-	public static void testSerializationApacheSerializerFlatObj() {
+	public static void ApacheSerializerFlatObj() {
 		Serializer serializer = new SerializerApacheImpl();
 
 		byte[] bytes = serializer.objectToByteArray(flatDto);
@@ -102,8 +119,8 @@ public class Main {
 
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
-	public static void testSerializationManualStringSerializerFlatObj() {
-		Serializer serializer = new SerializerToStringImpl();
+	public static void GsonToBytesSerializerFlatObj() {
+		Serializer serializer = new SerializerGsonToBytesImpl();
 
 		byte[] bytes = serializer.objectToByteArray(flatDto);
 
@@ -112,8 +129,8 @@ public class Main {
 
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
-	public static void testSerializationManualStringSerializerObj() {
-		Serializer serializer = new SerializerToStringImpl();
+	public static void GsonToBytesSerializerObj() {
+		Serializer serializer = new SerializerGsonToBytesImpl();
 
 		byte[] bytes = serializer.objectToByteArray(graphDto);
 
