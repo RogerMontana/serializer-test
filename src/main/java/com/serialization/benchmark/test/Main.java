@@ -1,8 +1,6 @@
 package com.serialization.benchmark.test;
 
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-import java.util.zip.DataFormatException;
 
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -17,6 +15,7 @@ import com.serialization.benchmark.test.dto.ProgrammingLangDTO;
 import com.serialization.benchmark.test.serializer.Serializer;
 import com.serialization.benchmark.test.serializer.impl.SerializerApacheImpl;
 import com.serialization.benchmark.test.serializer.impl.SerializerImpl;
+import com.serialization.benchmark.test.serializer.impl.SerializerToStringImpl;
 
 /**
  * Created by Artem Karpov
@@ -28,7 +27,7 @@ public class Main {
 
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
-	public static void testSerializationHomeBrewSerializer() throws IOException, ClassNotFoundException, DataFormatException {
+	public static void testSerializationHomeBrewSerializer() {
 		Serializer serializer = new SerializerImpl();
 
 		byte[] bytes = serializer.objectToByteArray(graphDto);
@@ -56,7 +55,7 @@ public class Main {
 
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
-	public static void testSerializationHomeBrewSerializerFlatObj() throws IOException, ClassNotFoundException, DataFormatException {
+	public static void testSerializationHomeBrewSerializerFlatObj() {
 		Serializer serializer = new SerializerImpl();
 
 		byte[] bytes = serializer.objectToByteArray(flatDto);
@@ -83,7 +82,7 @@ public class Main {
 
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
-	public static void testSerializationApacheSerializer() throws IOException, ClassNotFoundException, DataFormatException {
+	public static void testSerializationApacheSerializer() {
 		Serializer serializer = new SerializerApacheImpl();
 
 		byte[] bytes = serializer.objectToByteArray(graphDto);
@@ -93,11 +92,32 @@ public class Main {
 
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
-	public static void testSerializationApacheSerializerFlatObj() throws IOException, ClassNotFoundException, DataFormatException {
+	public static void testSerializationApacheSerializerFlatObj() {
 		Serializer serializer = new SerializerApacheImpl();
 
 		byte[] bytes = serializer.objectToByteArray(flatDto);
 
 		ParamsDto res = serializer.toObject(bytes, ParamsDto.class);
 	}
+
+	@Benchmark
+	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
+	public static void testSerializationManualStringSerializerFlatObj() {
+		Serializer serializer = new SerializerToStringImpl();
+
+		byte[] bytes = serializer.objectToByteArray(flatDto);
+
+		ParamsDto res = serializer.toObject(bytes, ParamsDto.class);
+	}
+
+	@Benchmark
+	@BenchmarkMode(Mode.AverageTime) @OutputTimeUnit(TimeUnit.NANOSECONDS)
+	public static void testSerializationManualStringSerializerObj() {
+		Serializer serializer = new SerializerToStringImpl();
+
+		byte[] bytes = serializer.objectToByteArray(graphDto);
+
+		ProgrammingLangDTO res = serializer.toObject(bytes, ProgrammingLangDTO.class);
+	}
+
 }
