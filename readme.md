@@ -6,7 +6,7 @@ RAM: 23.4 GiB
 
 Result of JMH Test:
 
-|Benchmark      |FlatObj              |Mode   |Samples  |Score      |Score error |Units |
+|Benchmark       FlatObj              |Mode   |Samples  |Score      |Score error |Units |
 | :----------------------------------:| :---: | :-----: |:--------: |:----------:|:----:|
 |GsonToBytesSerializerFlatObj         |  avgt |      10 |  6984.254 |     494.971| ns/op|
 |KryoSerializerFlatObj                |  avgt |      10 | 12334.007 |     636.009| ns/op|
@@ -14,7 +14,7 @@ Result of JMH Test:
 |ApacheSerializerFlatObj              |  avgt |      10 | 18963.227 |    1000.702| ns/op|
 
 
-|Benchmark      |Obj with inner Object|Mode   |Samples  |Score      |Score error |Units |
+|Benchmark       Obj with inner Object|Mode   |Samples  |Score      |Score error |Units |
 | :----------------------------------:| :---: | :-----: |:--------: |:----------:|:----:|
 |GsonToBytesSerializerObj             |  avgt |      10 | 11945.070 |     586.754| ns/op|
 |KryoSerializerObj                    |  avgt |      10 | 15624.360 |     367.077| ns/op|
